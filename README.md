@@ -1,4 +1,4 @@
-<br>Install webapp2</b>
+<b>Install webapp2</b>
 
 pip install WebOb<br>
 pip install Paste<br>
