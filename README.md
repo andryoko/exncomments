@@ -1,10 +1,10 @@
-Install webapp2
+<br>Install webapp2</b>
 
-pip install WebOb
-pip install Paste
-pip install webapp2
+pip install WebOb<br>
+pip install Paste<br>
+pip install webapp2<br>
 
-Required
+<b>Required</b>
 
-Celery (Distributed Task Queue): http://www.celeryproject.org/
-Redis: http://redis.io/
+Celery (Distributed Task Queue): http://www.celeryproject.org/ <br>
+Redis: http://redis.io/<br>
