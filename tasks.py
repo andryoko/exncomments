@@ -31,7 +31,14 @@ def create_report(report_id):
 
     writer.writerow(fieldnames)
     for r in data:
-      writer.writerow([x for x in r])
+      row = []
+      for val in r:
+        if isinstance(val, int):
+          row.append(val)
+        else:
+          row.append((val or '').encode('utf-8'))
+
+      writer.writerow(row)
 
   # update report row
   dbm.update_report(report_id, file_name)
