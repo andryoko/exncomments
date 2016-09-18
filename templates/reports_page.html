@@ -1,0 +1,75 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+<div>
+  <div>
+    <a href="/comment/new_report?viewer_id={{viewer_id}}">New report</a>
+  </div>
+  <h3>Reports:</h3>
+  <table>
+    <th>Id</th>
+    <th>Object Type</th>
+    <th>Object Id</th>
+    <th>User Id</th>
+    <th>Start Period</th>
+    <th>End Period</th>
+    <th>Status</th>
+    <th>Report Name</th>
+    <th>Action</th>
+
+    <tbody>
+      {% for report in reports %}
+        <tr id="report_{{report.ID}}">
+          <td>{{report.ID}}</td>
+          <td>{{report.OBJ_TYPE}}</td>
+          <td>{{report.OBJ_ID}}</td>
+          <td>{{report.USER_ID}}</td>
+          <td>{{report.START_DATE}}</td>
+          <td>{{report.END_DATE}}</td>
+          <td class="status">{{report.STATUS}}</td>
+          <td class="filename">{{report.FILE_NAME}}</td>
+          <td class="action">
+            {% if report.STATUS == 'completed' %}
+              <a href="#" onclick="onRestart({{report.ID}}, '{{viewer_id}}');">Restart</a> |
+              <a href="/{{ report.FILE_NAME }}">Download</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+  <div>
+    {% if prev_page > -1 %}
+    <a href="/comment/reports?viewer_id={{viewer_id}}&page={{ prev_page }}">Prev</a>
+    {% endif %} | Page:{{ page }} |
+    {% if next_page %}
+    <a href="/comment/reports?viewer_id={{viewer_id}}&page={{ next_page }}">Next</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function onRestart(report_id, viewer_id) {
+    $.ajax({
+      type: "POST",
+      url: "/comment/reports/",
+      data: {
+        action: 'restart',
+        report_id: report_id,
+        viewer_id: viewer_id
+      }
+    }).done(function(result) {
+      $(".status", "#report_"+report_id).text("working")
+
+    }).error(function(data) {
+      var result = data.responseJSON
+
+      if (result.message) {
+        alert(result.message);
+      }
+    });
+  }
+</script>
+{% endblock %}

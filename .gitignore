@@ -1,2 +1,15 @@
-# Google App Engine generated folder
-appengine-generated/
+# ignore folders starting with _
+_*/
+
+# ignore .pyc files
+*.pyc
+
+# ignore pycharm project files
+*.idea
+
+# ignore irrelevant folders
+temp/
+
+# ignore hidden files and folders
+.*
+

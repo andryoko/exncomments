@@ -1,0 +1,73 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+    <div>
+      <div>
+        {% if error %}{{ error }}{% endif %}
+      </div>
+      <div>
+        {% if tree %}
+          <a href="/comment/tree?comment_id={{tree}}&viewer_id={{viewer_id}}">Back</a>
+        {% else %}
+          <a href="/{% if obj_type and obj_id %}?obj_type={{obj_type}}&obj_id={{obj_id}}{% endif %}&viewer_id={{viewer_id}}">Back</a>
+        {% endif %}
+
+        <form id="post_form" class="text-left" action="/comment/add" method="POST">
+          {% if comment %}
+            <h3>Edit Comment: {{ comment.ID }}</h3>
+            <input type="hidden" name="comment_id" id="comment_id" value="{{ comment.ID }}" />
+            <h3>Parent Comment: {% if parent_id %}{{ parent_id }}{% else %}NULL{% endif %} </h3>
+          {% endif %}
+
+          {% if viewer_id %}
+            <input type="hidden" name="viewer_id" value="{{ viewer_id }}" />
+          {% endif %}
+
+          {% if parent_id %}
+          <input type="hidden" name="parent_id" id="parent_id" value="{{ parent_id }}" />
+          {% endif %}
+
+          {% if tree %}
+          <input type="hidden" name="tree" id="tree" value="{{ tree }}" />
+          {% endif %}
+
+          <h3>Object Type:{% if obj_type %}{{ obj_type }}{% endif %}</h3>
+          {% if obj_type %}
+            <input type="hidden" name="obj_type" id="obj_type" value="{{ obj_type }}"/>
+          {% else %}
+            <select name="obj_type"/>
+            {% for value in object_types %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+            </select>
+          {% endif %}
+
+          <h3>Object Id:{% if obj_id %}{{ obj_id }}{% endif %}</h3>
+          {% if obj_id %}
+            <input type="hidden" name="obj_id" id="obj_id" value="{{ obj_id }}" />
+          {% else %}
+            <select name="obj_id"/>
+            {% for value in object_ids %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+            </select>
+          {% endif %}
+
+          <h3>User Id:{% if comment %}{{ comment.USER_ID }}{% elif viewer_id %}{{viewer_id}}{% endif %}</h3>
+          {% if comment %}
+            <input type="hidden" name="user_id" value="{{ comment.USER_ID }}" />
+          {% elif not viewer_id  %}
+            <select name="user_id"/>
+            {% for value in user_ids %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+            </select>
+          {% endif %}
+
+          <h3>Comment:</h3>
+          <input type="text" name="comment" id="comment" value="{% if comment %}{{ comment.COMMENT }}{% endif %}" />
+          <input type="submit" name="submit" value="Save comment" />
+        </form>
+      </div>
+    </div>
+{% endblock %}

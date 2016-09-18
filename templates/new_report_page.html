@@ -1,0 +1,36 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+<div>
+  <div>
+    <a href="/comment/reports?viewer_id={{viewer_id}}">Back</a>
+  </div>
+  <h3>New report parameters:</h3>
+
+  <form id="obj_form" class="text-left" action="/comment/new_report" method="POST">
+      <select name="obj_type">
+        {% for value in object_types %}
+        <option value="{{ value }}" {% if value == obj_type %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="obj_id">
+        {% for value in object_ids %}
+        <option value="{{ value }}" {% if value == obj_id %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="user_id" id="user_id">
+        {% for value in user_ids %}
+        <option value="{{ value }}" {% if value == user_id %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+
+      <input type="date" name="start_date" value="" />
+      <input type="date" name="end_date" value="" />
+
+      <input type="hidden" name="viewer_id" value="{{viewer_id}}"/>
+      <input type="submit" name="submit" value="Create" />
+    </form>
+</div>
+{% endblock %}

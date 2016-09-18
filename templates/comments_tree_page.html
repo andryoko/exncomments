@@ -1,0 +1,42 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+    <div>
+      <div>
+        {% if error %}{{ error }}{% endif %}
+      </div>
+      <a href="/?obj_type={{parent.OBJ_TYPE}}&obj_id={{parent.OBJ_ID}}&page={{page}}">Back</a>
+      <div id="parent_comment">
+        <div>
+          <span><b>Object Type:</b> {{ parent.OBJ_TYPE }}</span>
+          <span><b>Object Id:</b> {{ parent.OBJ_ID }}</span>
+        </div>
+        <div>Parent id:{{ parent.ID }}</div>
+        <div>User id: {{ parent.USER_ID }}</div>
+        <div>Comment: {{ parent.COMMENT }} </div>
+
+        <div>
+          <span>
+              <a href="/comment/add?obj_type={{parent.OBJ_TYPE}}&obj_id={{parent.OBJ_ID}}&parent_id={{parent.ID}}&viewer_id={{viewer_id}}&tree={{parent.ID}}">add child</a> |
+              <a href="/comment/edit?comment_id={{parent.ID}}&viewer_id={{viewer_id}}&tree={{parent.ID}}">Edit</a>
+          </span>
+        </div>
+      </div>
+
+      <div id="children">
+        <ul class="sitemap">
+          {% for item in comments_tree recursive %}
+            <li><span>{{ item.value.ID }} {{item.value.USER_ID}} {{ item.value.COMMENT }}
+              <a href="/comment/add?obj_type={{item.value.OBJ_TYPE}}&obj_id={{item.value.OBJ_ID}}&parent_id={{item.value.ID}}&viewer_id={{viewer_id}}&tree={{parent.ID}}">add child</a> |
+              <a href="/comment/edit?comment_id={{item.value.ID}}&viewer_id={{viewer_id}}&tree={{parent.ID}}">Edit</a> |
+              <a href="#" onclick="onDelete({{item.value.ID}}, '{{viewer_id}}')">Delete</a>
+            </span>
+             {% if item.children %}
+                <ul class="submenu">{{ loop(item.children) }}</ul>
+             {% endif %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+{% endblock %}

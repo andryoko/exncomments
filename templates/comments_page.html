@@ -1,0 +1,94 @@
+{% extends "site_base.html" %}
+
+{% block content %}
+<div>
+    <div>
+      <form id="viewer_form" class="text-left" action="/" method="GET">
+        <select name="viewer_id" id="viewer_id">
+          {% for value in user_ids %}
+          <option value="{{ value }}" {% if value == viewer_id %}selected{% endif %}>{{ value }}</option>
+          {% endfor %}
+        </select>
+        {% if obj_type %}
+          <input type="hidden" name="obj_type" value="{{obj_type}}"/>
+        {% endif %}
+        {% if obj_id %}
+          <input type="hidden" name="obj_id" value="{{obj_id}}"/>
+        {% endif %}
+        <input type="submit" name="submit" value="Select viewer" />
+        <a href="#" onclick="goReportsPage();">Reports</a>
+      </form>
+    </div>
+
+    <form id="obj_form" class="text-left" action="/" method="GET">
+      <select name="obj_type">
+        {% for value in object_types %}
+        <option value="{{ value }}" {% if value == obj_type %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="obj_id">
+        {% for value in object_ids %}
+        <option value="{{ value }}" {% if value == obj_id %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+      {% if viewer_id %}
+      <input type="hidden" name="viewer_id" value="{{viewer_id}}"/>
+      {% endif %}
+      <input type="submit" name="submit" value="Select comments" />
+    </form>
+
+    <h3>Viewer:{% if viewer_id %}{{viewer_id}}{% endif %}</h3>
+    <h3>{% if obj_type and obj_id %}{{obj_type}}.{{obj_id}}{% endif %} Comments: {% if obj_type and obj_id and viewer_id %}<a href="/comment/add{% if obj_type and obj_id %}?obj_type={{ obj_type}}&obj_id={{ obj_id }}&viewer_id={{viewer_id}}{% endif %}">Add New</a>{% endif %}</h3>
+    <div>
+      <table border='1' cellpadding='5' style="border-collapse:collapse;">
+        <th>ID</th>
+        <th>Object Type</th>
+        <th>Object Id</th>
+        <th>User Id</th>
+        <th>Comment</th>
+        <th>Created</th>
+        <th>Modified</th>
+        <th>Actions</th>
+
+        <tbody id="comments">
+        {% for comment in comments %}
+          <tr>
+            <td>{{ comment.ID }}</td>
+            <td>{{ comment.OBJ_TYPE}}</td>
+            <td>{{ comment.OBJ_ID}}</td>
+            <td>{{ comment.USER_ID}}</td>
+            <td>{{ comment.COMMENT}}</td>
+            <td>{{ comment.CREATED_DATE}}</td>
+            <td>{{ comment.UPDATED_DATE}}</td>
+            <td>
+              <a href="/comment/edit?comment_id={{ comment.ID }}&viewer_id={{viewer_id}}">Edit</a> |
+              <a href="#" onclick="onDelete({{ comment.ID }}, '{{viewer_id}}')">Delete</a> |
+              <a href="/comment/tree?comment_id={{ comment.ID }}&viewer_id={{viewer_id}}&page={{page}}">Children</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+
+      </table>
+      <div>
+        {% if prev_page > -1 %}
+        <a href="/?obj_type={{ obj_type }}&obj_id={{ obj_id }}&viewer_id={{viewer_id}}&page={{ prev_page }}">Prev</a>
+        {% endif %} | Page:{{ page }} |
+        {% if next_page %}
+        <a href="/?obj_type={{ obj_type }}&obj_id={{ obj_id }}&viewer_id={{viewer_id}}&page={{ next_page }}">Next</a>
+        {% endif %}
+      </div>
+    </div>
+
+</div>
+
+<script>
+  var curret_page = {{ page }}
+
+  function goReportsPage() {
+    var viewer_id = $("#viewer_id").val();
+    window.location = "/comment/reports?viewer_id=" + viewer_id;
+  }
+</script>
+
+{% endblock %}
