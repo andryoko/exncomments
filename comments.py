@@ -32,9 +32,13 @@ class DbManager(object):
   connection.row_factory = sqlite3.Row
 
   @classmethod
+  def connect(cls, dbname):
+    cls.connection = sqlite3.connect(dbname, check_same_thread=False)
+    cls.connection.row_factory = sqlite3.Row
+
+  @classmethod
   def commit(cls):
     cls.connection.commit()
-
 
   @classmethod
   def insert(cls, table_name, params, cursor=None):

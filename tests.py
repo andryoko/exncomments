@@ -22,8 +22,7 @@ if os.path.isfile(TEST_DB):
 
 scheme.create_scheme(TEST_DB)
 
-db.connection = sqlite3.connect(TEST_DB)
-db.connection.row_factory = sqlite3.Row
+db.connect(TEST_DB)
 
 class SomeTestCase(unittest.TestCase):
   def setUp(self):

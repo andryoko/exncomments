@@ -19,8 +19,7 @@ def add(x, y):
 
 @app.task
 def create_report(report_id):
-  dbm.connection = sqlite3.connect(config.DB_NAME)
-  dbm.connection.row_factory = sqlite3.Row
+  dbm.connect(config.DB_NAME)
 
   data = dbm.get_report_data(report_id)
   file_name = dbm.get_report_file_name(report_id)
@@ -42,5 +41,6 @@ def create_report(report_id):
 
   # update report row
   dbm.update_report(report_id, file_name)
+  dbm.connection.close()
 
   return file_name
